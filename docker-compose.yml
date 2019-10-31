@@ -1,0 +1,10 @@
+version: '3'
+services:
+  codegen:
+    image: xdcc-downloader
+    build:
+      context: .
+    working_dir: /output
+    volumes:
+      - ./output:/output
+    command: ["/msg CR-HOLLAND|NEW xdcc send #3626"]

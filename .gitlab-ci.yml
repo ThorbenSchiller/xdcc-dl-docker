@@ -1,0 +1,27 @@
+stages:
+  - build
+  - deploy
+
+deploy docker image:
+  stage: deploy
+  image: docker:git
+  services:
+    - docker:dind
+  script:
+    - docker login -u "gitlab-ci-token" -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - master
+
+deploy tagged docker image:
+  stage: deploy
+  image: docker:git
+  services:
+    - docker:dind
+  script:
+    - docker login -u "gitlab-ci-token" -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+  only:
+    - tags
